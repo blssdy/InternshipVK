@@ -10,7 +10,7 @@ namespace DataModels.Models
 {
     public interface IState : IID
     {
-        StateType code { get; }
+        StateType Code { get; }
         string Description { get; }
     }
 }

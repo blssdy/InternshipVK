@@ -15,7 +15,7 @@ namespace Database.Models
         public int ID { get; private set; }
 
         [Required]
-        public StateType code { get; private set; }
+        public StateType Code { get; private set; }
         [Required]
         public string Description { get; private set; } = string.Empty;
 
