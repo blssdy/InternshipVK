@@ -31,10 +31,11 @@ namespace BusinessLogic.BusinessLogic
             return true;
         }
 
-        public bool Delete(UserBindingModel model)
+        public bool Disable(UserBindingModel model)
         {
             CheckUser(model,false);
-            if(_userStorage.Delete(model) == null)
+            model.StateID = (int)StateType.Blocked;
+            if(_userStorage.Disable(model) == null)
             {
                 return false;
             }
@@ -52,6 +53,11 @@ namespace BusinessLogic.BusinessLogic
 
             if (user == null) { return null; }
 
+            if(user.StateID == (int)StateType.Blocked)
+            {
+                throw new InvalidOperationException("Current user is disabled.");
+            }
+
             return user;
         }
 
@@ -60,6 +66,17 @@ namespace BusinessLogic.BusinessLogic
             var users  = _userStorage.GetUsers();
 
             if(users == null)
+            {
+                return null;
+            }
+            return users;
+        }
+
+        public List<UserViewModel>? ReadActiveUsers()
+        {
+            var users = _userStorage.GetActiveUsers();
+
+            if (users == null)
             {
                 return null;
             }
@@ -109,5 +126,24 @@ namespace BusinessLogic.BusinessLogic
             }
 
         }
+
+        public bool CheckGroup(UserSearchModel model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var user = _userStorage.GetUser(model);
+
+            if (user == null) { return false; }
+
+            if (user.GroupID == (int)GroupType.Admin)
+            {
+                return true;
+            }
+            return false;
+        }
+        
     }
 }

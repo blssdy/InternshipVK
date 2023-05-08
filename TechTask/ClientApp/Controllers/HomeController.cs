@@ -1,5 +1,7 @@
 ﻿using ClientApp.Models;
+using Contracts.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ClientApp.Controllers
@@ -15,7 +17,49 @@ namespace ClientApp.Controllers
 
         public IActionResult Index()
         {
+            if (APIClient.User == null) { return Redirect("~/Home/Enter"); }
+            return View(APIClient.GetRequest<UserViewModel>($"api/main/getuser?userID={APIClient.User.ID}"));
+        }
+
+        [HttpGet]
+        public IActionResult Enter()
+        {
             return View();
+        }
+
+        [HttpPost]
+        public void Enter(string login, string password)
+        {
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password)) { throw new Exception("Enter login and password"); }
+            APIClient.User = APIClient.GetRequest<UserViewModel>($"api/user/login?login={login}&password={password}");
+            if (APIClient.User == null) { throw new Exception("Incorrect login/password"); }
+            Response.Redirect("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Users()
+        {
+            if (APIClient.User == null) { return Redirect("~/Home/Enter"); }
+            if(APIClient.GetRequest<bool>($"api/main/checkgroup?login={APIClient.User.Login}") == false)
+            {
+                throw new Exception("You must have admin priviliges to use this page.");
+            }
+
+            ViewBag.Users = APIClient.GetRequest<List<UserViewModel>>($"api/main/getactiveuserslist");
+            return View(APIClient.GetRequest<List<UserViewModel>>($"api/main/getuserslist"));
+        }
+
+        [HttpPatch]
+        public void Users(int user)
+        {
+            APIClient.PatchRequest("api/main/disableuser", user);
+            
+            if(user == APIClient.User.ID)
+            {
+                APIClient.User = null;
+            }
+
+            Response.Redirect("Index");
         }
 
         public IActionResult Privacy()

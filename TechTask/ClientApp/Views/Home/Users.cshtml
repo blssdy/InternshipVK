@@ -1,19 +1,14 @@
 ﻿@using Contracts.ViewModels
 @model List<UserViewModel>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Users";
 }
 <div class="text-center">
-    <h1 class="display-4">Personal data</h1>
+    <h1 class="display-4">Users</h1>
 </div>
 
 <div class="text-center">
     @{
-        if (Model == null)
-        {
-            <h3 class="display-4">Sign in</h3>
-            return;
-        }        
         <table class="table">
             <thead>
                 <tr>
@@ -30,10 +25,10 @@
                         Created
                     </th>
                     <th>
-                        GroupStatus
+                        Group
                     </th>
                     <th>
-                        StateStatus
+                        State
                     </th>
                 </tr>
             </thead>
@@ -63,5 +58,9 @@
                 }
             </tbody>
         </table>
+        <div class="text-center">
+            <h1 class="display-4">Delete user:</h1>
+        </div>
+        <select id="user" name="user" class="form-control" asp-items="@(new SelectList(@ViewBag.Users,"ID", "Login"))"></select>
     }
 </div>

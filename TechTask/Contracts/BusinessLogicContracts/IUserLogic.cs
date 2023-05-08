@@ -13,7 +13,9 @@ namespace Contracts.BusinessLogicContracts
     {
         UserViewModel? ReadUser(UserSearchModel model);
         List<UserViewModel>? ReadUsers();
+        List<UserViewModel>? ReadActiveUsers();
         bool Create(UserBindingModel model);
-        bool Delete(UserBindingModel model);
+        bool Disable(UserBindingModel model);
+        bool CheckGroup(UserSearchModel model);
     }
 }

@@ -12,8 +12,9 @@ namespace Contracts.StorageContracts
     public interface IUserStorage
     {
         List<UserViewModel> GetUsers();
+        List<UserViewModel> GetActiveUsers();
         UserViewModel? GetUser(UserSearchModel model);
         UserViewModel? Insert(UserBindingModel model);
-        UserViewModel? Delete(UserBindingModel model);
+        UserViewModel? Disable(UserBindingModel model);
     }
 }

@@ -22,7 +22,7 @@ namespace RestAPI.Controllers
         {
             try
             {
-                return _logic.ReadUser(new UserSearchModel { Login = login });
+                return _logic.ReadUser(new UserSearchModel { Login = login, Password = password });
             }
             catch (Exception ex)
             {
@@ -42,5 +42,6 @@ namespace RestAPI.Controllers
                 throw;
             }
         }
+       
     }
 }

@@ -3,6 +3,7 @@ using Contracts.SearchModels;
 using Contracts.StorageContracts;
 using Contracts.ViewModels;
 using Database.Models;
+using DataModels.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace Database.Storages
                 return null;
             }
             using var context = new DatabaseContext();
+
+            if(!string.IsNullOrEmpty(model.Password))
+            {
+                return context.Users.FirstOrDefault(user => model.Login.Equals(user.Login) && model.Password.Equals(user.Password))?.GetViewModel;
+            }
+
             return context.Users.FirstOrDefault(user => (!string.IsNullOrEmpty(model.Login) && model.Login.Equals(user.Login)) || (model.ID.HasValue && model.ID == user.ID))?.GetViewModel;
         }
 
@@ -27,6 +34,12 @@ namespace Database.Storages
         {
             using var context = new DatabaseContext();
             return context.Users.Select(user => user.GetViewModel).ToList();
+        }
+
+        public List<UserViewModel> GetActiveUsers()
+        {
+            using var context = new DatabaseContext();
+            return context.Users.Where(user => user.StateID == (int)StateType.Active).Select(user => user.GetViewModel).ToList();
         }
 
         public UserViewModel? Insert(UserBindingModel model)
@@ -41,7 +54,7 @@ namespace Database.Storages
             context.SaveChanges();
             return newUser.GetViewModel;
         }
-        public UserViewModel? Delete(UserBindingModel model)
+        public UserViewModel? Disable(UserBindingModel model)
         {
             using var context = new DatabaseContext();
             var user = context.Users.FirstOrDefault(user => user.ID == model.ID);
