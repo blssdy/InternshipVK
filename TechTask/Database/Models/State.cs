@@ -1,4 +1,5 @@
-﻿using DataModels.Enums;
+﻿using Contracts.ViewModels;
+using DataModels.Enums;
 using DataModels.Models;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,7 @@ namespace Database.Models
 
         [ForeignKey("StateID")]
         public virtual List<User> Users { get; private set; } = new();
+
+        public StateViewModel GetViewModel => new() { ID = ID, Code = Code, Description = Description };
     }
 }
