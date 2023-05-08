@@ -1,0 +1,113 @@
+﻿using Contracts.BindingModels;
+using Contracts.BusinessLogicContracts;
+using Contracts.SearchModels;
+using Contracts.StorageContracts;
+using Contracts.ViewModels;
+using DataModels.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BusinessLogic.BusinessLogic
+{
+    public class UserLogic : IUserLogic
+    {
+        private readonly IUserStorage _userStorage;
+
+        public UserLogic(IUserStorage userStorage)
+        {
+            _userStorage = userStorage;
+        }
+
+        public bool Create(UserBindingModel model)
+        {
+            CheckUser(model);
+            if(_userStorage.Insert(model) == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool Delete(UserBindingModel model)
+        {
+            CheckUser(model,false);
+            if(_userStorage.Delete(model) == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public UserViewModel? ReadUser(UserSearchModel model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var user = _userStorage.GetUser(model);
+
+            if (user == null) { return null; }
+
+            return user;
+        }
+
+        public List<UserViewModel>? ReadUsers()
+        {
+            var users  = _userStorage.GetUsers();
+
+            if(users == null)
+            {
+                return null;
+            }
+            return users;
+        }
+
+        public void CheckUser(UserBindingModel model, bool extraCheck = true)
+        {
+            if(model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+            if(!extraCheck)
+            {
+                return;
+            }
+
+            if(string.IsNullOrEmpty(model.Login))
+            {
+                throw new ArgumentNullException("Invalid user's login", nameof(model.Login));
+            }
+            if (string.IsNullOrEmpty(model.Password))
+            {
+                throw new ArgumentNullException("Invalid user's password", nameof(model.Password));
+            }
+
+            var user = _userStorage.GetUser(new UserSearchModel
+            {
+                Login = model.Login
+            });
+
+            if(user != null && model.ID != user.ID)
+            {
+                throw new InvalidOperationException("User with such login already exists.");
+            }
+
+            if(model.GroupID != (int)GroupType.Admin)
+            {
+                return;
+            }
+
+            var users = _userStorage.GetUsers();
+
+            if(users.FirstOrDefault(user => user.GroupID == (int)GroupType.Admin) != null)
+            {
+                throw new InvalidOperationException("User with admin priviliges is already existed.");
+            }
+
+        }
+    }
+}
