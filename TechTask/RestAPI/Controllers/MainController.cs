@@ -11,10 +11,12 @@ namespace RestAPI.Controllers
     public class MainController : Controller
     {
         private readonly IUserLogic _user;
+        private readonly IAuxilaryLogic _auxilary;
 
-        public MainController(IUserLogic user)
+        public MainController(IUserLogic user, IAuxilaryLogic auxilary)
         {
             _user = user;
+            _auxilary = auxilary;
         }
 
         [HttpGet]
@@ -54,6 +56,19 @@ namespace RestAPI.Controllers
                 });
             }
             catch (Exception ex) 
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public List<GroupViewModel>? GetGroupsList()
+        {
+            try
+            {
+                return _auxilary.GetGroupsList();
+            }
+            catch
             {
                 throw;
             }

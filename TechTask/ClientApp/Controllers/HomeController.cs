@@ -1,4 +1,5 @@
 ﻿using ClientApp.Models;
+using Contracts.BindingModels;
 using Contracts.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -61,6 +62,31 @@ namespace ClientApp.Controllers
 
             Response.Redirect("Index");
         }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            ViewBag.Roles = APIClient.GetRequest<List<GroupViewModel>>($"api/main/getgroupslist");
+            return View();
+        }
+
+        [HttpPost]
+        public void Register(string login, string password, int role)
+        {
+            if(string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+            {
+                throw new Exception("Enter login and password.");
+            }
+
+            APIClient.PostRequest("api/user/register", new UserBindingModel
+            {
+                Login = login,
+                Password = password,
+                GroupID = role
+            });
+            Response.Redirect("Enter");           
+        }
+
 
         public IActionResult Privacy()
         {

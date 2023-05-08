@@ -1,5 +1,7 @@
 ﻿using Database.Models;
+using DataModels.Enums;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +17,17 @@ namespace Database
             if(optionsBuilder.IsConfigured == false)
             {
                 optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=AppDB;Username=postgres;Password=postgres");
-            }
+            }           
             base.OnConfiguring(optionsBuilder); 
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.HasPostgresEnum<GroupType>();
+            builder.HasPostgresEnum<StateType>();
+           
+        }
+        
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<Group> Groups { get; set; }

@@ -24,6 +24,9 @@ namespace BusinessLogic.BusinessLogic
         public bool Create(UserBindingModel model)
         {
             CheckUser(model);
+
+            model.StateID = (int)StateType.Active;
+
             if(_userStorage.Insert(model) == null)
             {
                 return false;
@@ -34,7 +37,9 @@ namespace BusinessLogic.BusinessLogic
         public bool Disable(UserBindingModel model)
         {
             CheckUser(model,false);
+
             model.StateID = (int)StateType.Blocked;
+
             if(_userStorage.Disable(model) == null)
             {
                 return false;
