@@ -105,7 +105,7 @@ namespace BusinessLogic.BusinessLogic
 
             if(users.FirstOrDefault(user => user.GroupID == (int)GroupType.Admin) != null)
             {
-                throw new InvalidOperationException("User with admin priviliges is already existed.");
+                throw new InvalidOperationException("User with admin priviliges already exists.");
             }
 
         }
