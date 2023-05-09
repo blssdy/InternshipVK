@@ -1,5 +1,6 @@
 ﻿using Contracts.StorageContracts;
 using Contracts.ViewModels;
+using Database.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,7 @@ namespace Database.Storages
             using var context = new DatabaseContext();
             return context.States.Select(state => state.GetViewModel).ToList();
         }
+        
+
     }
 }

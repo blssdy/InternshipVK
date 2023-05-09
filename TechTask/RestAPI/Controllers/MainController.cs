@@ -55,7 +55,7 @@ namespace RestAPI.Controllers
                     ID = userID,
                 });
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw;
             }
@@ -88,12 +88,12 @@ namespace RestAPI.Controllers
         }
 
         [HttpPatch]
-        public bool DisableUser(int userID)
+        public bool DisableUser(UserBindingModel model)
         {
             try
             {
 
-                return _user.Disable(new UserBindingModel { ID = userID });
+                return _user.Disable(new UserBindingModel { ID = model.ID });
             }
             catch (Exception ex)
             {

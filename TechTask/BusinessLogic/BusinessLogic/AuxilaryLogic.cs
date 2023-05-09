@@ -16,7 +16,8 @@ namespace BusinessLogic.BusinessLogic
         public AuxilaryLogic(IAuxilaryStorage auxilaryStorage)
         {
             _auxilaryStorage = auxilaryStorage;
-        }
+        }       
+
         public List<GroupViewModel>? GetGroupsList()
         {
             var groups = _auxilaryStorage.GetGroups();

@@ -1,6 +1,7 @@
 ﻿using ClientApp.Models;
 using Contracts.BindingModels;
 using Contracts.ViewModels;
+using DataModels.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -50,10 +51,10 @@ namespace ClientApp.Controllers
             return View(APIClient.GetRequest<List<UserViewModel>>($"api/main/getuserslist"));
         }
 
-        [HttpPatch]
+        [HttpPost]
         public void Users(int user)
         {
-            APIClient.PatchRequest("api/main/disableuser", user);
+            APIClient.PatchRequest("api/main/disableuser", new UserBindingModel { ID = user});
             
             if(user == APIClient.User.ID)
             {
@@ -86,8 +87,7 @@ namespace ClientApp.Controllers
             });
             Response.Redirect("Enter");           
         }
-
-
+        
         public IActionResult Privacy()
         {
             return View();

@@ -45,10 +45,10 @@ namespace ClientApp
             }
         }
 
-        public static void PatchRequest<T>(string requestUrl,T param)
+        public static void PatchRequest<T>(string requestUrl,T model)
         {
-            var json = JsonConvert.SerializeObject(param);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var json = JsonConvert.SerializeObject(model);
+            var data = new StringContent(json, Encoding.UTF8, "application/json-patch+json");
 
             var response = _client.PatchAsync(requestUrl, data);
 

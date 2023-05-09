@@ -12,6 +12,11 @@ namespace Database
 {
     public class DatabaseContext : DbContext
     {
+        static DatabaseContext()
+        {
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<GroupType>("group_type");
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<StateType>("state_type");
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if(optionsBuilder.IsConfigured == false)
@@ -24,8 +29,7 @@ namespace Database
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.HasPostgresEnum<GroupType>();
-            builder.HasPostgresEnum<StateType>();
-           
+            builder.HasPostgresEnum<StateType>();           
         }
         
         public virtual DbSet<User> Users { get; set; }

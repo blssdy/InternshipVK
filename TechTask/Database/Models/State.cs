@@ -23,6 +23,22 @@ namespace Database.Models
         [ForeignKey("StateID")]
         public virtual List<User> Users { get; private set; } = new();
 
+        public static State? Create(StateViewModel? model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+            return new State()
+            {
+                ID = model.ID,
+                Code = model.Code,
+                Description = model.Description,
+            };
+        }
+
         public StateViewModel GetViewModel => new() { ID = ID, Code = Code, Description = Description };
+
+        
     }
 }

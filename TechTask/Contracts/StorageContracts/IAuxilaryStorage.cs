@@ -10,6 +10,6 @@ namespace Contracts.StorageContracts
     public interface IAuxilaryStorage
     {
         List<StateViewModel> GetStates();
-        List<GroupViewModel> GetGroups();
+        List<GroupViewModel> GetGroups();       
     }
 }

@@ -10,8 +10,8 @@ namespace DataModels.Enums
     public enum GroupType
     {
         [PgName("admin")]
-        Admin = 0,
+        Admin = 1,
         [PgName("user")]
-        User = 1
+        User = 2
     }
 }

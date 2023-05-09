@@ -1,4 +1,5 @@
-﻿using Contracts.ViewModels;
+﻿using Contracts.BindingModels;
+using Contracts.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Contracts.BusinessLogicContracts
     {
         List<StateViewModel>? GetStatesList();
         List<GroupViewModel>? GetGroupsList();
+       
     }
 }

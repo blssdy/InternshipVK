@@ -10,8 +10,8 @@ namespace DataModels.Enums
     public enum StateType
     {
         [PgName("blocked")]
-        Blocked = 0,
+        Blocked = 1,
         [PgName("active")]
-        Active = 1      
+        Active = 2      
     }
 }
