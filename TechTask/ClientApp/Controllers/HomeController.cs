@@ -24,7 +24,7 @@ namespace ClientApp.Controllers
             {
                 ViewBag.Message = new string(ex);
             }
-            return View(APIClient.GetRequest<UserViewModel>($"api/main/getuser?userID={APIClient.User.ID}"));
+            return View(Task.Run(() => APIClient.GetRequest<UserViewModel>($"api/main/getuser?userID={APIClient.User.ID}")).Result);
         }
 
         [HttpGet]
@@ -40,7 +40,7 @@ namespace ClientApp.Controllers
             {
                 if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password)) { throw new Exception("Enter login and password"); }
 
-                APIClient.User = APIClient.GetRequest<UserViewModel>($"api/user/login?login={login}&password={password}").Result;
+                APIClient.User = Task.Run(() => APIClient.GetRequest<UserViewModel>($"api/user/login?login={login}&password={password}")).Result;
                 
                 if (APIClient.User == null) { throw new Exception("Incorrect login/password"); }
             }
@@ -59,7 +59,7 @@ namespace ClientApp.Controllers
             if (APIClient.User == null) { return Redirect("~/Home/Enter"); }
             try
             {
-                if (APIClient.GetRequest<bool>($"api/main/checkgroup?login={APIClient.User.Login}").Result == false)
+                if (Task.Run(() => APIClient.GetRequest<bool>($"api/main/checkgroup?login={APIClient.User.Login}")).Result == false)
                 {
                     throw new Exception("You must have admin priviliges to use this page.");
                 }
@@ -69,8 +69,8 @@ namespace ClientApp.Controllers
                 return Redirect($"Index?ex={ex.Message.ToString()}");
             }
            
-            ViewBag.Users = APIClient.GetRequest<List<UserViewModel>>($"api/main/getactiveuserslist");
-            return View(APIClient.GetRequest<List<UserViewModel>>($"api/main/getuserslist"));
+            ViewBag.Users = Task.Run(() => APIClient.GetRequest<List<UserViewModel>>($"api/main/getactiveuserslist")).Result;
+            return View(Task.Run(() => APIClient.GetRequest<List<UserViewModel>>($"api/main/getuserslist")).Result);
         }
 
         [HttpPost]
@@ -89,7 +89,7 @@ namespace ClientApp.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            ViewBag.Roles = APIClient.GetRequest<List<GroupViewModel>>($"api/main/getgroupslist");
+            ViewBag.Roles = Task.Run(() => APIClient.GetRequest<List<GroupViewModel>>($"api/main/getgroupslist")).Result;
             return View();
         }
 
