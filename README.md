@@ -20,9 +20,9 @@ TechTaskOnlyRestAPI - только реализация API.
 #TechTaskOnlyRestAPI
 /api/Main/DisableUser: для корректного запроса обязательным к заполнению требуется лишь поле "id".
 /api/User/Register: для корректного запроса обязательными к заполнению требуются следующие поля:
-  "login",
-  "password",
-  "groupID", где 1 - это Admin, а 2 - User.
+"login",
+"password",
+"groupID", где 1 - это Admin, а 2 - User.
 
 
 
