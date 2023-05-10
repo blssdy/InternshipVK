@@ -103,19 +103,19 @@ namespace ClientApp.Controllers
                     throw new Exception("Enter login and password.");
                 }
 
-                Task.Run(() => APIClient.PostRequest("api/user/register", new UserBindingModel
+                Task createUser = Task.Run(() => APIClient.PostRequest("api/user/register", new UserBindingModel
                 {
                     Login = login,
                     Password = password,
                     GroupID = role
                 }));
+                createUser.Wait();
             }
             catch(Exception ex)
             {
                 ViewBag.Message = new string(ex.Message.ToString());
                 return View();
-            }
-            
+            }           
             return Redirect("Enter");           
         }
         

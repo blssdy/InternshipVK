@@ -3,6 +3,7 @@ using Contracts.BusinessLogicContracts;
 using Contracts.SearchModels;
 using Contracts.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace RestAPI.Controllers
 {
@@ -29,6 +30,7 @@ namespace RestAPI.Controllers
             {
                 throw;
             }
+
         }
 
         [HttpPost]
@@ -42,6 +44,7 @@ namespace RestAPI.Controllers
             {
                 throw;
             }
+
         }
        
     }

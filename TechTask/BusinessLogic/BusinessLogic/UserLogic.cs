@@ -31,6 +31,7 @@ namespace BusinessLogic.BusinessLogic
             {
                 return false;
             }
+            Thread.Sleep(5000);
             return true;
         }
 
@@ -127,7 +128,7 @@ namespace BusinessLogic.BusinessLogic
 
             if(users.FirstOrDefault(user => user.GroupID == (int)GroupType.Admin) != null)
             {
-                throw new InvalidOperationException("User with admin priviliges already exists.");
+                throw new Exception("User with admin priviliges already exists.");
             }
 
         }
