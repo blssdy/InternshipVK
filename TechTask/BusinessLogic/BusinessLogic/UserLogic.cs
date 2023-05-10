@@ -31,7 +31,7 @@ namespace BusinessLogic.BusinessLogic
             {
                 return false;
             }
-            Task.Delay(5000);
+            Thread.Sleep(5000);
             return true;
         }
 
