@@ -3,6 +3,7 @@ using Contracts.BusinessLogicContracts;
 using Contracts.SearchModels;
 using Contracts.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace RestAPI.Controllers
 {
@@ -20,11 +21,11 @@ namespace RestAPI.Controllers
         }
 
         [HttpGet]
-        public List<UserViewModel>? GetUsersList()
+        public async Task<List<UserViewModel>?> GetUsersList()
         {
             try
             {
-                return _user.ReadUsers();
+                return await Task.Run(() => _user.ReadUsers());
             }
             catch (Exception ex)
             {
@@ -33,11 +34,11 @@ namespace RestAPI.Controllers
         }
 
         [HttpGet]
-        public List<UserViewModel>? GetActiveUsersList()
+        public async Task<List<UserViewModel>?> GetActiveUsersList()
         {
             try
             {
-                return _user.ReadActiveUsers();
+                return await Task.Run(() => _user.ReadActiveUsers());
             }
             catch (Exception ex)
             {
@@ -46,14 +47,14 @@ namespace RestAPI.Controllers
         }
 
         [HttpGet]
-        public UserViewModel? GetUser(int userID)
+        public async Task<UserViewModel?> GetUser(int userID)
         {
             try
             {
-                return _user.ReadUser(new UserSearchModel
+                return await Task.Run(() =>_user.ReadUser(new UserSearchModel
                 {
                     ID = userID,
-                });
+                }));
             }
             catch (Exception ex)
             {
@@ -62,11 +63,11 @@ namespace RestAPI.Controllers
         }
 
         [HttpGet]
-        public List<GroupViewModel>? GetGroupsList()
+        public async Task<List<GroupViewModel>?> GetGroupsList()
         {
             try
             {
-                return _auxilary.GetGroupsList();
+                return await Task.Run(() => _auxilary.GetGroupsList());
             }
             catch
             {
@@ -75,11 +76,11 @@ namespace RestAPI.Controllers
         }
 
         [HttpGet]
-        public bool CheckGroup(string login)
+        public async Task<bool> CheckGroup(string login)
         {
             try
             {
-                return _user.CheckGroup(new UserSearchModel { Login = login });
+                return await Task.Run(() => _user.CheckGroup(new UserSearchModel { Login = login }));
             }
             catch (Exception ex)
             {
@@ -88,12 +89,12 @@ namespace RestAPI.Controllers
         }
 
         [HttpPatch]
-        public bool DisableUser(UserBindingModel model)
+        public async Task<bool> DisableUser(UserBindingModel model)
         {
             try
             {
 
-                return _user.Disable(new UserBindingModel { ID = model.ID });
+                return await Task.Run(() => _user.Disable(new UserBindingModel { ID = model.ID }));
             }
             catch (Exception ex)
             {

@@ -24,13 +24,14 @@ namespace BusinessLogic.BusinessLogic
         public bool Create(UserBindingModel model)
         {
             CheckUser(model);
-
+            
             model.StateID = (int)StateType.Active;
 
             if(_userStorage.Insert(model) == null)
             {
                 return false;
             }
+            Task.Delay(5000);
             return true;
         }
 
@@ -113,7 +114,7 @@ namespace BusinessLogic.BusinessLogic
                 Login = model.Login
             });
 
-            if(user != null && model.ID != user.ID)
+            if(user != null && model.ID != user.ID && user.StateID != (int)StateType.Blocked)
             {
                 throw new InvalidOperationException("User with such login already exists.");
             }

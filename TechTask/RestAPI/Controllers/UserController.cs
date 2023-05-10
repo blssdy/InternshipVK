@@ -18,11 +18,11 @@ namespace RestAPI.Controllers
         }
 
         [HttpGet]
-        public UserViewModel? Login(string login, string password)
+        public async Task<UserViewModel?> Login(string login, string password)
         {
             try
             {
-                return _logic.ReadUser(new UserSearchModel { Login = login, Password = password });
+                return await Task.Run(() => _logic.ReadUser(new UserSearchModel { Login = login, Password = password }));
                 
             }
             catch (Exception ex)
@@ -30,13 +30,14 @@ namespace RestAPI.Controllers
                 throw;
             }
         }
-
+       
         [HttpPost]
-        public void Register(UserBindingModel model)
+        public async Task Register(UserBindingModel model)
         {
             try
             {
-                _logic.Create(model);
+                await Task.Run(() => _logic.Create(model));
+                await Task.Run(() => _logic.Create(model));
             }
             catch (Exception ex)
             {
