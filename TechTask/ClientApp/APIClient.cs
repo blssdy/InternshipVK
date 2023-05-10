@@ -17,11 +17,11 @@ namespace ClientApp
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public static T? GetRequest<T>(string requestUrl)
+        public async static Task<T?> GetRequest<T>(string requestUrl)
         {
-            var response = _client.GetAsync(requestUrl);
-            var result = response.Result.Content.ReadAsStringAsync().Result;
-            if (response.Result.IsSuccessStatusCode)
+            var response = await _client.GetAsync(requestUrl);
+            var result = response.Content.ReadAsStringAsync().Result;
+            if (response.IsSuccessStatusCode)
             {
                 return JsonConvert.DeserializeObject<T>(result);
             }
@@ -31,29 +31,29 @@ namespace ClientApp
             }
         }
 
-        public static void PostRequest<T>(string requestUrl, T model)
+        public static async Task PostRequest<T>(string requestUrl, T model)
         {
             var json = JsonConvert.SerializeObject(model);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = _client.PostAsync(requestUrl, data);
+            var response = await _client.PostAsync(requestUrl, data);
 
-            var result = response.Result.Content.ReadAsStringAsync().Result;
-            if (!response.Result.IsSuccessStatusCode)
+            var result = response.Content.ReadAsStringAsync().Result;
+            if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(result);
             }
         }
 
-        public static void PatchRequest<T>(string requestUrl,T model)
+        public static async Task PatchRequest<T>(string requestUrl,T model)
         {
             var json = JsonConvert.SerializeObject(model);
             var data = new StringContent(json, Encoding.UTF8, "application/json-patch+json");
 
-            var response = _client.PatchAsync(requestUrl, data);
+            var response = await _client.PatchAsync(requestUrl, data);
 
-            var result = response.Result.Content.ReadAsStringAsync().Result;
-            if (!response.Result.IsSuccessStatusCode)
+            var result = response.Content.ReadAsStringAsync().Result;
+            if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(result);
             }

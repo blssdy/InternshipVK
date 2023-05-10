@@ -17,9 +17,13 @@ namespace ClientApp.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? ex)
         {
             if (APIClient.User == null) { return Redirect("~/Home/Enter"); }
+            if(ex is not null)
+            {
+                ViewBag.Message = new string(ex);
+            }
             return View(APIClient.GetRequest<UserViewModel>($"api/main/getuser?userID={APIClient.User.ID}"));
         }
 
@@ -30,23 +34,41 @@ namespace ClientApp.Controllers
         }
 
         [HttpPost]
-        public void Enter(string login, string password)
-        {
-            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password)) { throw new Exception("Enter login and password"); }
-            APIClient.User = APIClient.GetRequest<UserViewModel>($"api/user/login?login={login}&password={password}");
-            if (APIClient.User == null) { throw new Exception("Incorrect login/password"); }
-            Response.Redirect("Index");
+        public IActionResult Enter(string login, string password)
+        {           
+            try
+            {
+                if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password)) { throw new Exception("Enter login and password"); }
+
+                APIClient.User = APIClient.GetRequest<UserViewModel>($"api/user/login?login={login}&password={password}").Result;
+                
+                if (APIClient.User == null) { throw new Exception("Incorrect login/password"); }
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Message = new string(ex.Message.ToString());
+                return View();
+            }
+           
+            return Redirect("Index");
         }
 
         [HttpGet]
         public IActionResult Users()
         {
             if (APIClient.User == null) { return Redirect("~/Home/Enter"); }
-            if(APIClient.GetRequest<bool>($"api/main/checkgroup?login={APIClient.User.Login}") == false)
+            try
             {
-                throw new Exception("You must have admin priviliges to use this page.");
+                if (APIClient.GetRequest<bool>($"api/main/checkgroup?login={APIClient.User.Login}").Result == false)
+                {
+                    throw new Exception("You must have admin priviliges to use this page.");
+                }
             }
-
+            catch(Exception ex)
+            {                
+                return Redirect($"Index?ex={ex.Message.ToString()}");
+            }
+           
             ViewBag.Users = APIClient.GetRequest<List<UserViewModel>>($"api/main/getactiveuserslist");
             return View(APIClient.GetRequest<List<UserViewModel>>($"api/main/getuserslist"));
         }
@@ -54,7 +76,7 @@ namespace ClientApp.Controllers
         [HttpPost]
         public void Users(int user)
         {
-            APIClient.PatchRequest("api/main/disableuser", new UserBindingModel { ID = user});
+            Task.Run(() => APIClient.PatchRequest("api/main/disableuser", new UserBindingModel { ID = user }));
             
             if(user == APIClient.User.ID)
             {
@@ -72,20 +94,29 @@ namespace ClientApp.Controllers
         }
 
         [HttpPost]
-        public void Register(string login, string password, int role)
+        public IActionResult Register(string login, string password, int role)
         {
-            if(string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+            try
             {
-                throw new Exception("Enter login and password.");
-            }
+                if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+                {
+                    throw new Exception("Enter login and password.");
+                }
 
-            APIClient.PostRequest("api/user/register", new UserBindingModel
+                Task.Run(() => APIClient.PostRequest("api/user/register", new UserBindingModel
+                {
+                    Login = login,
+                    Password = password,
+                    GroupID = role
+                }));
+            }
+            catch(Exception ex)
             {
-                Login = login,
-                Password = password,
-                GroupID = role
-            });
-            Response.Redirect("Enter");           
+                ViewBag.Message = new string(ex.Message.ToString());
+                return View();
+            }
+            
+            return Redirect("Enter");           
         }
         
         public IActionResult Privacy()

@@ -101,7 +101,7 @@ namespace BusinessLogic.BusinessLogic
 
             if(string.IsNullOrEmpty(model.Login))
             {
-                throw new ArgumentNullException("Invalid user's login", nameof(model.Login));
+                throw new ArgumentNullException("Invalid user's login", nameof(model.Login));                
             }
             if (string.IsNullOrEmpty(model.Password))
             {

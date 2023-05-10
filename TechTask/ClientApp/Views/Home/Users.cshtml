@@ -64,7 +64,8 @@
                 <h1 class="display-4">Delete user:</h1>
             </div>
             <select id="user" name="user" class="form-control" asp-items="@(new SelectList(@ViewBag.Users,"ID", "Login"))"></select>
-            <div class="col-4"><input type="submit" value="Delete" class="btn btn-primary" /></div>
+            <div class="col-4"><input type="submit" value="Delete" class="btn btn-primary" /></div>           
         </form>
+        
 }
 </div>
