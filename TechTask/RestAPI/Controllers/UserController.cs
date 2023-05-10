@@ -37,7 +37,6 @@ namespace RestAPI.Controllers
             try
             {
                 await Task.Run(() => _logic.Create(model));
-                await Task.Run(() => _logic.Create(model));
             }
             catch (Exception ex)
             {
